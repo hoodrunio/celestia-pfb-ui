@@ -53,15 +53,9 @@ impl ApiService {
 
         let result = req.send().await?;
 
-        if result.status().is_success() {
-            let parsed_body = self.parse_api_response::<B>(result).await?;
-            Ok(parsed_body)
-        } else {
-            Err(anyhow::Error::msg(format!(
-                "Request failed with status code: {}",
-                result.status()
-            )))
-        }
+        let res = self.parse_api_response::<B>(result).await?;
+
+        Ok(res)
     }
 
     pub async fn submit_pfb(&self, request: SubmitPfbRequest) -> Result<SubmitPfbResponse> {

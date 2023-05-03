@@ -1,6 +1,8 @@
 mod api;
+mod utils;
 
 pub use crate::api::*;
+pub use crate::utils::*;
 
 #[tokio::main]
 async fn main() {
@@ -13,7 +15,7 @@ async fn main() {
             dbg!(serde_json::to_string(&res).unwrap_or_default());
         }
         Err(e) => {
-            dbg!(e);
+            dbg!(&e);
         }
     };
 }
