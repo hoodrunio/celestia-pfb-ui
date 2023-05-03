@@ -1,3 +1,7 @@
+use axum::Json;
+
+use crate::{AppError, AppResponse};
+
 pub enum RouterPath {
     Root,
     SubmitPfbTransaction,
@@ -19,3 +23,5 @@ impl RouterPath {
 pub fn path(path: RouterPath) -> &'static str {
     path.get_path()
 }
+
+pub type HandlerResult<T> = Result<Json<AppResponse<T>>, AppError>;

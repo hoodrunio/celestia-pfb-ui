@@ -1,9 +1,15 @@
 use serde::{Deserialize, Serialize};
 
-use super::gen_pfb_tx_data;
+use crate::res;
 
-pub async fn submit_pfb_transaction() -> &'static str {
-    "Hello, World!"
+use super::{gen_pfb_tx_data, HandlerResult};
+
+pub async fn submit_pfb_transaction() -> HandlerResult<PfbGeneratedTxDataResponse> {
+    Ok(res(PfbGeneratedTxDataResponse::default()))
+}
+
+pub async fn get_pfb_tx_data() -> HandlerResult<PfbGeneratedTxDataResponse> {
+    Ok(res(PfbGeneratedTxDataResponse::default()))
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -21,5 +27,11 @@ impl PfbGeneratedTxDataResponse {
             namespace_id,
             message,
         }
+    }
+}
+
+impl Default for PfbGeneratedTxDataResponse {
+    fn default() -> Self {
+        Self::new(None, None)
     }
 }

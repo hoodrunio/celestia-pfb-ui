@@ -1,11 +1,11 @@
 use axum::Json;
 use serde::{Deserialize, Serialize};
 
-use crate::{res, AppError, AppResponse};
+use crate::res;
 
-use super::PfbGeneratedTxDataResponse;
+use super::{HandlerResult, PfbGeneratedTxDataResponse};
 
-pub async fn home() -> Result<Json<AppResponse<HomeResponse>>, AppError> {
+pub async fn home() -> HandlerResult<HomeResponse> {
     let data = HomeResponse::new_with_pfb_tx_data();
     Ok(res(data))
 }
@@ -17,7 +17,7 @@ pub struct HomeResponse {
 
 impl HomeResponse {
     pub fn new_with_pfb_tx_data() -> Self {
-        let pfb_tx_data = PfbGeneratedTxDataResponse::new(None, None);
+        let pfb_tx_data = PfbGeneratedTxDataResponse::default();
         Self { pfb_tx_data }
     }
 }
