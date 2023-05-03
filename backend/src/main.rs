@@ -1,21 +1,32 @@
 mod api;
+mod router;
 mod utils;
+
+use router::init_router;
+use tracing_subscriber::prelude::__tracing_subscriber_SubscriberExt;
+use tracing_subscriber::util::SubscriberInitExt;
 
 pub use crate::api::*;
 pub use crate::utils::*;
 
 #[tokio::main]
 async fn main() {
-    let api = ApiService::new("15.235.119.27".to_string(), "26659".to_string());
+    tracing_subscriber::registry()
+        .with(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| "example_consume_body_in_extractor_or_middleware=debug".into()),
+        )
+        .with(tracing_subscriber::fmt::layer())
+        .init();
 
-    let req = api.submit_pfb(SubmitPfbRequest::new(None, None));
+    let app = init_router().await;
 
-    match req.await {
-        Ok(res) => {
-            dbg!(serde_json::to_string(&res).unwrap_or_default());
-        }
-        Err(e) => {
-            dbg!(&e);
-        }
-    };
+    tracing::info!("Starting server...");
+    // run it with hyper on localhost:3000
+    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
+
+    tracing::info!("Server is running on localhost::3000!");
 }

@@ -15,8 +15,11 @@ anyhow = "1.0.71"
 
 # Logger
 tracing = { version = "0.1.37", features = ["max_level_debug", "release_max_level_info", "log"] }
-tracing-subscriber = "0.3.4"
+tracing-subscriber = {version="0.3.4", features=["env-filter"]}
 
 # HTTP server
 axum = { version = "0.6.18", features = ["http2", "multipart"] }
 axum-server = { version = "0.4.7", features = ["tls-rustls"] }
+hyper = "0.14"
+tower = "0.4"
+tower-http = { version = "0.4.0", features = ["map-request-body", "util"] }
