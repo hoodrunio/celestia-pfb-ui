@@ -4,11 +4,11 @@ use crate::res;
 
 use super::{gen_pfb_tx_data, HandlerResult};
 
-pub async fn submit_pfb_transaction() -> HandlerResult<PfbGeneratedTxDataResponse> {
+pub async fn submit_pfb_tx() -> HandlerResult<PfbGeneratedTxDataResponse> {
     Ok(res(PfbGeneratedTxDataResponse::default()))
 }
 
-pub async fn get_pfb_tx_data() -> HandlerResult<PfbGeneratedTxDataResponse> {
+pub async fn generated_pfb_tx_data() -> HandlerResult<PfbGeneratedTxDataResponse> {
     Ok(res(PfbGeneratedTxDataResponse::default()))
 }
 

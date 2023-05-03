@@ -4,8 +4,8 @@ use crate::{AppError, AppResponse};
 
 pub enum RouterPath {
     Root,
-    SubmitPfbTransaction,
-    GeneratePfbTransactionData,
+    SubmitPfbTx,
+    GeneratePfbTxData,
 }
 
 impl RouterPath {
@@ -14,8 +14,8 @@ impl RouterPath {
 
         match self {
             Root => "/",
-            SubmitPfbTransaction => "/submit_pfb_transaction",
-            GeneratePfbTransactionData => "/generate_pfb_transaction_data",
+            SubmitPfbTx => "/submit_pfb_tx",
+            GeneratePfbTxData => "/generate_pfb_tx_data",
         }
     }
 }
