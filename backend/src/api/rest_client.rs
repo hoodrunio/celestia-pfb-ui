@@ -1,11 +1,12 @@
 use anyhow::Result;
+use axum::Error;
 use reqwest::{
     header::{HeaderMap, CONTENT_TYPE},
     Client, Response,
 };
 use serde::{de::DeserializeOwned, Serialize};
 
-use crate::{SubmitPfbNodeRequest, SubmitPfbNodeResponse};
+use crate::{AppError, SubmitPfbNodeRequest, SubmitPfbNodeResponse};
 
 #[derive(Default, Debug)]
 pub struct ApiService {
@@ -67,7 +68,8 @@ impl ApiService {
                 path,
                 Some(request),
             )
-            .await?;
+            .await
+            .map_err(|_| Error::new("Please be sure that you initialize node correctly check here. `https://docs.celestia.org/developers/node-tutorial/#submit-a-pfb-transaction`".to_string()))?;
 
         Ok(res)
     }
