@@ -5,7 +5,7 @@ use reqwest::{
 };
 use serde::{de::DeserializeOwned, Serialize};
 
-use crate::{SubmitPfbRequest, SubmitPfbResponse};
+use crate::{SubmitPfbNodeRequest, SubmitPfbNodeResponse};
 
 #[derive(Default, Debug)]
 pub struct ApiService {
@@ -58,11 +58,11 @@ impl ApiService {
         Ok(res)
     }
 
-    pub async fn submit_pfb(&self, request: SubmitPfbRequest) -> Result<SubmitPfbResponse> {
+    pub async fn submit_pfb(&self, request: SubmitPfbNodeRequest) -> Result<SubmitPfbNodeResponse> {
         let path = "/submit_pfb";
 
         let res = self
-            .send_request::<SubmitPfbRequest, SubmitPfbResponse>(
+            .send_request::<SubmitPfbNodeRequest, SubmitPfbNodeResponse>(
                 reqwest::Method::POST,
                 path,
                 Some(request),
