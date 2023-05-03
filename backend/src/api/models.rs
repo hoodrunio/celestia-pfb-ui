@@ -6,14 +6,14 @@ const GAS_LIMIT: u64 = 80000;
 const FEE: u64 = 2000;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct SubmitPfbRequest {
+pub struct SubmitPfbNodeRequest {
     pub namespace_id: String,
     pub data: String,
     pub gas_limit: u64,
     pub fee: u64,
 }
 
-impl SubmitPfbRequest {
+impl SubmitPfbNodeRequest {
     pub fn new(namespace_id: Option<String>, message: Option<String>) -> Self {
         let mut gen = PayForBlobGen::new();
         Self {
@@ -27,7 +27,7 @@ impl SubmitPfbRequest {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct SubmitPfbResponse {
+pub struct SubmitPfbNodeResponse {
     pub height: i64,
     pub txhash: Option<String>,
     pub codespace: Option<String>,
