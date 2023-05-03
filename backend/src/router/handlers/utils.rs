@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+
 pub enum RouterPath {
     Root,
     SubmitPfbTransaction,
@@ -18,4 +20,9 @@ impl RouterPath {
 
 pub fn path(path: RouterPath) -> &'static str {
     path.get_path()
+}
+
+#[derive(Default, Debug, Clone, Serialize, Deserialize)]
+pub struct AppResponse<T> {
+    pub data: T,
 }
