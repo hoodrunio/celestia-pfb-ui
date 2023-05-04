@@ -1,6 +1,16 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-import { Box, Button, Container, Grid } from '@mui/material';
+import {
+  Backdrop,
+  Box,
+  Button,
+  Card,
+  CardHeader,
+  Chip,
+  CircularProgress,
+  Container,
+  Grid,
+} from '@mui/material';
 import AppInput from './components/AppInput';
 import { useForm } from 'react-hook-form';
 import { useCallback, useEffect, useState } from 'react';
@@ -182,7 +192,12 @@ export function App() {
           </Grid>
         </Grid>
       </form>
-      {anyLoading && <div>Loading...</div>}
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={anyLoading}
+      >
+        <CircularProgress color="info" />
+      </Backdrop>
       {anyError && <div>Error: {JSON.stringify(anyError)}</div>}
       {pfbTxResult && <div>Success: {JSON.stringify(pfbTxResult)}</div>}
     </Container>
