@@ -51,8 +51,21 @@ export function App() {
     [reset, formInitValue]
   );
 
-  const onSubmit = useCallback((data: any) => {
+  const onSubmit = async (data: any) => {
     const formData = data as PfbFormType;
+    setAnyLoading(true);
+
+    try {
+      const data = await submitPbfTx(formData);
+      setPfbTxResult(data);
+      console.log(data);
+    } catch (error) {
+      const er = error as string;
+      setAnyError(er ?? 'Something went wrong');
+    } finally {
+      setAnyLoading(false);
+    }
+  };
 
   const onGenerate = useCallback(() => {
     generatePfbTxData();
