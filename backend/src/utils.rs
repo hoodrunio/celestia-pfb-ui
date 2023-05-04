@@ -4,6 +4,7 @@ use axum::{
 };
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 
 #[derive(Debug)]
 pub struct AppError(anyhow::Error);
@@ -13,7 +14,7 @@ impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Something went wrong: {}", self.0),
+            Json(json!({ "error": self.0.to_string() })),
         )
             .into_response()
     }
