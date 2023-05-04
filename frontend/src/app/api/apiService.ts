@@ -4,7 +4,7 @@ export interface IRequestOptions {
   method?: 'GET' | 'POST';
 }
 
-const getBaseData = async <T>(options: IRequestOptions): Promise<T> => {
+export const getBaseData = async <T>(options: IRequestOptions): Promise<T> => {
   const { path, method = 'GET', data: body } = options;
 
   const base_url = 'http://localhost:3000';
@@ -17,7 +17,7 @@ const getBaseData = async <T>(options: IRequestOptions): Promise<T> => {
 
   const data = await response.json();
   if (data?.error) {
-    throw new Error(JSON.stringify(data));
+    throw data;
   }
 
   if (data?.data) {
