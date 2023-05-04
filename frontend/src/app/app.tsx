@@ -76,8 +76,9 @@ export function App() {
   );
   const onReset = useCallback(() => {
     setPfbTxResult(undefined);
+    generatePfbTxData();
     reset(formInitValue());
-  }, [reset, formInitValue]);
+  }, [reset, formInitValue, generatePfbTxData]);
 
   const onSubmit = async (data: any) => {
     const formData = data as PfbFormType;
