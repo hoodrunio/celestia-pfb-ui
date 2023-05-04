@@ -8,6 +8,7 @@ interface AppInputProps {
   toolTipText?: string;
   required?: boolean;
   maxL?: number;
+  disabled?: boolean;
   minL?: number;
   form: UseFormReturn<FieldValues, any>;
 }
@@ -22,6 +23,7 @@ const AppInput = (props: AppInputProps) => {
     required = true,
     minL = 0,
     maxL = 100,
+    disabled,
   } = props;
 
   return (
@@ -52,6 +54,7 @@ const AppInput = (props: AppInputProps) => {
               placeholder={placeholder}
               label={label}
               required
+              disabled={disabled}
               helperText={helperText}
               error={!!error}
               {...field}
