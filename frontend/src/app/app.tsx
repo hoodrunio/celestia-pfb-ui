@@ -3,6 +3,7 @@
 import { Box, Button, Grid } from '@mui/material';
 import AppInput from './components/AppInput';
 import { useForm } from 'react-hook-form';
+import { useCallback, useEffect, useState } from 'react';
 import { useInitial } from './hooks/apiHooks/useInitial';
 import { useGetPbfTxData } from './hooks/apiHooks/useGeneratePfbParams';
 
@@ -52,7 +53,10 @@ export function App() {
 
   const onSubmit = useCallback((data: any) => {
     const formData = data as PfbFormType;
-  }, []);
+
+  const onGenerate = useCallback(() => {
+    generatePfbTxData();
+  }, [generatePfbTxData]);
 
   return (
     <form>
@@ -123,7 +127,9 @@ export function App() {
             </Button>
           </Box>
           <Box mx={1}>
-            <Button variant="contained">Generate</Button>
+              <Button variant="contained" onClick={onGenerate}>
+                Generate
+              </Button>
           </Box>
         </Grid>
       </Grid>
