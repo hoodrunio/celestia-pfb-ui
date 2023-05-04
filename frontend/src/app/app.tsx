@@ -1,4 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { JsonViewer } from '@textea/json-viewer';
 
 import {
   Backdrop,
@@ -10,10 +11,11 @@ import {
   CircularProgress,
   Container,
   Grid,
+  Typography,
 } from '@mui/material';
 import AppInput from './components/AppInput';
 import { useForm } from 'react-hook-form';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useInitial } from './hooks/apiHooks/useInitial';
 import { useGetPbfTxData } from './hooks/apiHooks/useGeneratePfbParams';
 import { PbfTxDataResponse, submitPbfTx } from './api/apiService';
@@ -64,10 +66,18 @@ export function App() {
     }),
     []
   );
-  const onReset = useCallback(
-    () => reset(formInitValue()),
-    [reset, formInitValue]
+
+  const hasResult = useMemo(() => !!pfbTxResult, [pfbTxResult]);
+  const disableInputs = useMemo(() => hasResult, [hasResult]);
+  const disableGenerateAction = useMemo(() => hasResult, [hasResult]);
+  const disableSubmitAction = useMemo(
+    () => hasResult || !isFormValid,
+    [hasResult, isFormValid]
   );
+  const onReset = useCallback(() => {
+    setPfbTxResult(undefined);
+    reset(formInitValue());
+  }, [reset, formInitValue]);
 
   const onSubmit = async (data: any) => {
     const formData = data as PfbFormType;
@@ -76,7 +86,6 @@ export function App() {
     try {
       const data = await submitPbfTx(formData);
       setPfbTxResult(data);
-      console.log(data);
     } catch (error) {
       const er = error as string;
       setAnyError(er ?? 'Something went wrong');
@@ -125,6 +134,7 @@ export function App() {
             <AppInput
               formName={FORM_FIELD.NAMESPACE}
               form={form}
+              disabled={disableInputs}
               label="Namespace Id"
               maxL={16}
               minL={16}
@@ -133,6 +143,7 @@ export function App() {
             <AppInput
               formName={FORM_FIELD.MESSAGE}
               form={form}
+              disabled={disableInputs}
               maxL={200}
               minL={200}
               label="Message"
@@ -149,12 +160,14 @@ export function App() {
             <AppInput
               formName={FORM_FIELD.NODE_URL}
               form={form}
+              disabled={disableInputs}
               label="Node Url"
               toolTipText="Your node public url"
             />
             <AppInput
               formName={FORM_FIELD.PORT}
               form={form}
+              disabled={disableInputs}
               label="Port"
               toolTipText="Your node public port"
             />
@@ -169,7 +182,7 @@ export function App() {
             <Box mx={1}>
               <Button
                 variant="contained"
-                disabled={!isFormValid}
+                disabled={disableSubmitAction}
                 onClick={handleSubmit(onSubmit)}
               >
                 Submit
@@ -185,7 +198,11 @@ export function App() {
               </Button>
             </Box>
             <Box mx={1}>
-              <Button variant="contained" onClick={onGenerate}>
+              <Button
+                variant="contained"
+                onClick={onGenerate}
+                disabled={disableGenerateAction}
+              >
                 Generate
               </Button>
             </Box>
@@ -199,7 +216,28 @@ export function App() {
         <CircularProgress color="info" />
       </Backdrop>
       {anyError && <div>Error: {JSON.stringify(anyError)}</div>}
-      {pfbTxResult && <div>Success: {JSON.stringify(pfbTxResult)}</div>}
+      {hasResult && (
+        <Box
+          display="flex"
+          flexDirection={'column'}
+          justifyContent="center"
+          alignItems="center"
+          mt={5}
+        >
+          <Typography variant="h5" color="#00A300" fontFamily="sans-serif">
+            Pay For Blob Tx Result
+          </Typography>
+          <JsonViewer
+            style={{
+              maxHeight: '50vh',
+              overflow: 'auto',
+              padding: '10px',
+              border: '2px solid #C5C5C5',
+            }}
+            value={pfbTxResult}
+          />
+        </Box>
+      )}
     </Container>
   );
 }
