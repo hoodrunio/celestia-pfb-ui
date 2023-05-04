@@ -1,11 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-import { Box, Button, Grid } from '@mui/material';
+import { Box, Button, Container, Grid } from '@mui/material';
 import AppInput from './components/AppInput';
 import { useForm } from 'react-hook-form';
 import { useCallback, useEffect, useState } from 'react';
 import { useInitial } from './hooks/apiHooks/useInitial';
 import { useGetPbfTxData } from './hooks/apiHooks/useGeneratePfbParams';
+import { PbfTxDataResponse, submitPbfTx } from './api/apiService';
 
 enum FORM_FIELD {
   NAMESPACE = 'namespace_id',
@@ -22,6 +23,12 @@ interface PfbFormType {
 }
 
 export function App() {
+  const [anyLoading, setAnyLoading] = useState(false);
+  const [anyError, setAnyError] = useState<string | undefined>(undefined);
+
+  const [pfbTxResult, setPfbTxResult] = useState<PbfTxDataResponse | undefined>(
+    undefined
+  );
   const form = useForm({ mode: 'onChange' });
   const {
     data: initialData,
@@ -35,6 +42,7 @@ export function App() {
     mutate: generatePfbTxData,
   } = useGetPbfTxData();
 
+  const { handleSubmit, reset, formState, setValue } = form;
   const { isValid: isFormValid, isDirty: isFormDirty } = formState;
 
   const formInitValue = useCallback(
@@ -71,87 +79,109 @@ export function App() {
     generatePfbTxData();
   }, [generatePfbTxData]);
 
+  useEffect(
+    () => setAnyLoading(initialLoading || generatePfbLoading),
+    [initialLoading, generatePfbLoading]
+  );
+
+  useEffect(
+    () => setAnyError(initialError ?? generatePfbError),
+    [initialError, generatePfbError]
+  );
+
+  useEffect(() => {
+    if (initialData?.pfb_tx_data || generatedPfbData) {
+      const namespaceId =
+        generatedPfbData?.namespace_id || initialData.pfb_tx_data.namespace_id;
+      const message =
+        generatedPfbData?.message || initialData.pfb_tx_data.message;
+
+      setValue(FORM_FIELD.NAMESPACE, namespaceId);
+      setValue(FORM_FIELD.MESSAGE, message);
+    }
+  }, [initialData, setValue, generatedPfbData]);
+
   return (
     <Container>
-    <form>
-      <Grid container spacing={1}>
-        <Grid
-          item
-          xs={12}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <AppInput
-            formName={FORM_FIELD.NAMESPACE}
-            form={form}
-            label="Namespace Id"
+      <form>
+        <Grid container spacing={1}>
+          <Grid
+            item
+            xs={12}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <AppInput
+              formName={FORM_FIELD.NAMESPACE}
+              form={form}
+              label="Namespace Id"
               maxL={16}
               minL={16}
-            toolTipText="Random generated namespace Id"
-          />
-          <AppInput
-            formName={FORM_FIELD.MESSAGE}
-            form={form}
+              toolTipText="Random generated namespace Id"
+            />
+            <AppInput
+              formName={FORM_FIELD.MESSAGE}
+              form={form}
               maxL={200}
               minL={200}
-            label="Message"
-            toolTipText="Random generated message"
-          />
-        </Grid>
-        <Grid
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          item
-          xs={12}
-        >
-          <AppInput
-            formName={FORM_FIELD.NODE_URL}
-            form={form}
-            label="Node Url"
-            toolTipText="Your node public url"
-          />
-          <AppInput
-            formName={FORM_FIELD.PORT}
-            form={form}
-            label="Port"
-            toolTipText="Your node public port"
-          />
-        </Grid>
-        <Grid
-          xs
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          spacing={1}
-        >
-          <Box mx={1}>
-            <Button
-              variant="contained"
-              disabled={!isFormValid}
-              onClick={handleSubmit(onSubmit)}
-            >
-              Submit
-            </Button>
-          </Box>
-          <Box mx={1}>
-            <Button
-              variant="contained"
-              disabled={!isFormDirty}
-              onClick={onReset}
-            >
-              Reset
-            </Button>
-          </Box>
-          <Box mx={1}>
+              label="Message"
+              toolTipText="Random generated message"
+            />
+          </Grid>
+          <Grid
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            item
+            xs={12}
+          >
+            <AppInput
+              formName={FORM_FIELD.NODE_URL}
+              form={form}
+              label="Node Url"
+              toolTipText="Your node public url"
+            />
+            <AppInput
+              formName={FORM_FIELD.PORT}
+              form={form}
+              label="Port"
+              toolTipText="Your node public port"
+            />
+          </Grid>
+          <Grid
+            xs
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            spacing={1}
+          >
+            <Box mx={1}>
+              <Button
+                variant="contained"
+                disabled={!isFormValid}
+                onClick={handleSubmit(onSubmit)}
+              >
+                Submit
+              </Button>
+            </Box>
+            <Box mx={1}>
+              <Button
+                variant="contained"
+                disabled={!isFormDirty}
+                onClick={onReset}
+              >
+                Reset
+              </Button>
+            </Box>
+            <Box mx={1}>
               <Button variant="contained" onClick={onGenerate}>
                 Generate
               </Button>
-          </Box>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </form>
+      </form>
       {anyLoading && <div>Loading...</div>}
       {anyError && <div>Error: {JSON.stringify(anyError)}</div>}
       {pfbTxResult && <div>Success: {JSON.stringify(pfbTxResult)}</div>}
