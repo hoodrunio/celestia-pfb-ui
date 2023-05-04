@@ -76,6 +76,11 @@ export function App() {
     () => hasResult || !isFormValid,
     [hasResult, isFormValid]
   );
+
+  const setError = useCallback((error: APiError | undefined) => {
+    setAnyError(error);
+  }, []);
+
   const onReset = useCallback(() => {
     setPfbTxResult(undefined);
     generatePfbTxData();
@@ -90,9 +95,7 @@ export function App() {
       const data = await submitPbfTx(formData);
       setPfbTxResult(data);
     } catch (error) {
-      const er = error as Error;
-      const parsed = JSON.parse(er?.message) as APiError;
-      setAnyError(parsed);
+      setError(error as APiError);
     } finally {
       setAnyLoading(false);
     }
@@ -108,8 +111,8 @@ export function App() {
   );
 
   useEffect(
-    () => setAnyError(initialError ?? generatePfbError),
-    [initialError, generatePfbError]
+    () => setError(initialError || generatePfbError),
+    [initialError, generatePfbError, setError]
   );
 
   useEffect(() => {
@@ -126,29 +129,13 @@ export function App() {
 
   useEffect(() => {
     if (anyError) {
-      toast.error(anyError?.error, {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: false,
-        theme: 'light',
-      });
+      toast.error(anyError?.error);
     }
   }, [anyError]);
 
   useEffect(() => {
     if (hasResult) {
-      toast.success('Successfully created Pfb Tx', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: false,
-        theme: 'light',
-      });
+      toast.success('Successfully created Pfb Tx');
     }
   }, [pfbTxResult, hasResult]);
 
