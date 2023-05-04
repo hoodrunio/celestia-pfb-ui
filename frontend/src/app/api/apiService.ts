@@ -40,14 +40,6 @@ export interface PbfTxDataResponse {
   pfb_result: object;
 }
 
-// export async function getInitialData(): Promise<InitialDataResponse> {
-//   return await getBaseData<InitialDataResponse>({ path: '/' });
-// }
-
-// export async function getPbfTxData(): Promise<PbfTxDataResponse> {
-//   return getBaseData<PbfTxDataResponse>({ path: '/generate_pfb_tx_data' });
-// }
-
 export const submitPbfTx = (data: any): Promise<PbfTxDataResponse> => {
   return getBaseData<PbfTxDataResponse>({
     path: '/submit_pfb_tx',
