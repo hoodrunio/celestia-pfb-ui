@@ -122,7 +122,7 @@ export function App() {
   }, [initialData, setValue, generatedPfbData]);
 
   return (
-    <Container>
+    <Box pt={4}>
       <form>
         <Grid container spacing={1}>
           <Grid
@@ -239,7 +239,7 @@ export function App() {
           />
         </Box>
       )}
-    </Container>
+    </Box>
   );
 }
 
