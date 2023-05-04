@@ -59,6 +59,7 @@ export function App() {
   }, [generatePfbTxData]);
 
   return (
+    <Container>
     <form>
       <Grid container spacing={1}>
         <Grid
@@ -72,11 +73,15 @@ export function App() {
             formName={FORM_FIELD.NAMESPACE}
             form={form}
             label="Namespace Id"
+              maxL={16}
+              minL={16}
             toolTipText="Random generated namespace Id"
           />
           <AppInput
             formName={FORM_FIELD.MESSAGE}
             form={form}
+              maxL={200}
+              minL={200}
             label="Message"
             toolTipText="Random generated message"
           />
@@ -134,6 +139,10 @@ export function App() {
         </Grid>
       </Grid>
     </form>
+      {anyLoading && <div>Loading...</div>}
+      {anyError && <div>Error: {JSON.stringify(anyError)}</div>}
+      {pfbTxResult && <div>Success: {JSON.stringify(pfbTxResult)}</div>}
+    </Container>
   );
 }
 
