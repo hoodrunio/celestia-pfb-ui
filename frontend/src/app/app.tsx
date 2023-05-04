@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { JsonViewer } from '@textea/json-viewer';
+import { ToastContainer, toast } from 'react-toastify';
 
 import {
   Backdrop,
@@ -19,6 +20,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useInitial } from './hooks/apiHooks/useInitial';
 import { useGetPbfTxData } from './hooks/apiHooks/useGeneratePfbParams';
 import { PbfTxDataResponse, submitPbfTx } from './api/apiService';
+import { APiError } from './hooks/apiHooks/base';
 
 enum FORM_FIELD {
   NAMESPACE = 'namespace_id',
@@ -36,7 +38,7 @@ interface PfbFormType {
 
 export function App() {
   const [anyLoading, setAnyLoading] = useState(false);
-  const [anyError, setAnyError] = useState<string | undefined>(undefined);
+  const [anyError, setAnyError] = useState<APiError | undefined>(undefined);
 
   const [pfbTxResult, setPfbTxResult] = useState<PbfTxDataResponse | undefined>(
     undefined
@@ -88,8 +90,9 @@ export function App() {
       const data = await submitPbfTx(formData);
       setPfbTxResult(data);
     } catch (error) {
-      const er = error as string;
-      setAnyError(er ?? 'Something went wrong');
+      const er = error as Error;
+      const parsed = JSON.parse(er?.message) as APiError;
+      setAnyError(parsed);
     } finally {
       setAnyLoading(false);
     }
@@ -120,6 +123,34 @@ export function App() {
       setValue(FORM_FIELD.MESSAGE, message);
     }
   }, [initialData, setValue, generatedPfbData]);
+
+  useEffect(() => {
+    if (anyError) {
+      toast.error(anyError?.error, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: false,
+        theme: 'light',
+      });
+    }
+  }, [anyError]);
+
+  useEffect(() => {
+    if (hasResult) {
+      toast.success('Successfully created Pfb Tx', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: false,
+        theme: 'light',
+      });
+    }
+  }, [pfbTxResult, hasResult]);
 
   return (
     <Box pt={4}>
@@ -216,7 +247,6 @@ export function App() {
       >
         <CircularProgress color="info" />
       </Backdrop>
-      {anyError && <div>Error: {JSON.stringify(anyError)}</div>}
       {hasResult && (
         <Box
           display="flex"
