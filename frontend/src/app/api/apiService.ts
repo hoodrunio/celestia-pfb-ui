@@ -17,7 +17,7 @@ const getBaseData = async <T>(options: IRequestOptions): Promise<T> => {
 
   const data = await response.json();
   if (data?.error) {
-    throw new Error(data.error);
+    throw new Error(JSON.stringify(data));
   }
 
   if (data?.data) {

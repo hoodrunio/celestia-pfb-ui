@@ -1,9 +1,13 @@
 import { KeyedMutator } from 'swr';
 
+export interface APiError {
+  error: string;
+}
+
 export interface FethcerHookReturn {
   isLoading: boolean;
   data?: any;
-  error?: string;
+  error?: APiError;
   mutate: KeyedMutator<any>;
 }
 
