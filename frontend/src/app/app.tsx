@@ -3,7 +3,8 @@
 import { Box, Button, Grid } from '@mui/material';
 import AppInput from './components/AppInput';
 import { useForm } from 'react-hook-form';
-import { useCallback } from 'react';
+import { useInitial } from './hooks/apiHooks/useInitial';
+import { useGetPbfTxData } from './hooks/apiHooks/useGeneratePfbParams';
 
 enum FORM_FIELD {
   NAMESPACE = 'namespace_id',
@@ -21,7 +22,18 @@ interface PfbFormType {
 
 export function App() {
   const form = useForm({ mode: 'onChange' });
-  const { handleSubmit, reset, formState } = form;
+  const {
+    data: initialData,
+    isLoading: initialLoading,
+    error: initialError,
+  } = useInitial();
+  const {
+    data: generatedPfbData,
+    isLoading: generatePfbLoading,
+    error: generatePfbError,
+    mutate: generatePfbTxData,
+  } = useGetPbfTxData();
+
   const { isValid: isFormValid, isDirty: isFormDirty } = formState;
 
   const formInitValue = useCallback(
