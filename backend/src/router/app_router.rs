@@ -1,4 +1,6 @@
 use crate::router::handlers::*;
+use tower_http::cors::CorsLayer;
+
 use axum::{
     routing::{get, post},
     Router,
@@ -10,4 +12,5 @@ pub async fn init_router() -> Router {
         .route(path(Root), get(home))
         .route(path(GeneratePfbTxData), get(generated_pfb_tx_data))
         .route(path(SubmitPfbTx), post(submit_pfb_tx))
+        .layer(CorsLayer::permissive())
 }
