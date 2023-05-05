@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { JsonViewer } from '@textea/json-viewer';
 import { toast } from 'react-toastify';
+import DownloadIcon from '@mui/icons-material/Download';
 
 import {
   Backdrop,
@@ -8,6 +9,7 @@ import {
   Button,
   CircularProgress,
   Grid,
+  IconButton,
   Typography,
 } from '@mui/material';
 import AppInput from './components/AppInput';
@@ -17,6 +19,7 @@ import { useInitial } from './hooks/apiHooks/useInitial';
 import { useGetPbfTxData } from './hooks/apiHooks/useGeneratePfbParams';
 import { PbfTxDataResponse, submitPbfTx } from './api/apiService';
 import { APiError } from './hooks/apiHooks/base';
+import { useJsonDownload } from './hooks/useJsonDownload';
 
 enum FORM_FIELD {
   NAMESPACE = 'namespace_id',
@@ -38,6 +41,8 @@ const SEED_RANGE = { mx: 1000, mn: 100 };
 export function App() {
   const [anyLoading, setAnyLoading] = useState(false);
   const [anyError, setAnyError] = useState<APiError | undefined>(undefined);
+
+  const download = useJsonDownload();
 
   const [pfbTxResult, setPfbTxResult] = useState<PbfTxDataResponse | undefined>(
     undefined
@@ -86,6 +91,13 @@ export function App() {
     reset(formInitValue());
     generatePfbTxData();
   }, [reset, formInitValue, generatePfbTxData]);
+
+  const onDownload = useCallback(() => {
+    download({
+      json: pfbTxResult?.pfb_result as object,
+      fileName: 'pfb-tx-result.json',
+    });
+  }, [pfbTxResult, download]);
 
   const onSubmit = async (data: any) => {
     const formData = data as PfbFormType;
@@ -273,6 +285,9 @@ export function App() {
           <Typography variant="h5" color="#00A300" fontFamily="sans-serif">
             Pay For Blob Tx Result
           </Typography>
+          <Button endIcon={<DownloadIcon />} color="info" onClick={onDownload}>
+            Download
+          </Button>
           <JsonViewer
             style={{
               maxHeight: '50vh',
