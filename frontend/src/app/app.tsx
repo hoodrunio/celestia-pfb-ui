@@ -189,9 +189,11 @@ export function App() {
           </Grid>
           <Grid
             xs
+            item
             display="flex"
             justifyContent="center"
             alignItems="center"
+            container
             spacing={1}
           >
             <Box mx={1}>
