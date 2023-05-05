@@ -7,7 +7,10 @@ export interface IRequestOptions {
 export const getBaseData = async <T>(options: IRequestOptions): Promise<T> => {
   const { path, method = 'GET', data: body } = options;
 
-  const base_url = 'http://localhost:3000';
+  const API_BASE_URL = 'http://backend:8000';
+
+  const base_url = API_BASE_URL;
+
   // eslint-disable-next-line no-undef
   const response = await fetch(`${base_url}${path}`, {
     method,

@@ -9,11 +9,6 @@ WORKDIR /backend
 # Copy Cargo.toml and Cargo.lock into the container
 COPY ./backend/Cargo.toml ./backend/Cargo.lock ./
 
-# Create a dummy main.rs and build only dependencies (no actual src code yet)
-RUN mkdir -p src/bin && \
-    echo "fn main() {}" > src/bin/dummy.rs && \
-    cargo build --bin dummy --release && \
-    rm -r src
 
 # Copy the backend source code
 COPY ./backend/src ./src

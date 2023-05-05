@@ -2,6 +2,8 @@ mod api;
 mod router;
 mod utils;
 
+use std::net::SocketAddr;
+
 use router::init_router;
 use tracing_subscriber::prelude::__tracing_subscriber_SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
@@ -22,11 +24,13 @@ async fn main() {
     let app = init_router().await;
 
     tracing::info!("Starting server...");
+    let addr = SocketAddr::from(([0, 0, 0, 0], 8000));
+
     // run it with hyper on localhost:3000
-    axum::Server::bind(&"0.0.0.0:9898".parse().unwrap())
+    axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
         .unwrap();
 
-    tracing::info!("Server is running on localhost::3000!");
+    tracing::info!("Server is running on localhost::8000!");
 }

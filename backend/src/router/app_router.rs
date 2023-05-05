@@ -1,10 +1,10 @@
 use crate::router::handlers::*;
-use tower_http::cors::CorsLayer;
 
 use axum::{
     routing::{get, post},
     Router,
 };
+use tower_http::cors::CorsLayer;
 use RouterPath::*;
 
 pub async fn init_router() -> Router {
