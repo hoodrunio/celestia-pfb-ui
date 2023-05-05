@@ -35,7 +35,7 @@ const AppInput = (props: AppInputProps) => {
         rules={{
           required: {
             value: required,
-            message: `Field is required`,
+            message: `Field is required.`,
           },
           minLength: {
             value: minL,
