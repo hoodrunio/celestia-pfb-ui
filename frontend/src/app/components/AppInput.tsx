@@ -10,6 +10,7 @@ interface AppInputProps {
   maxL?: number;
   disabled?: boolean;
   minL?: number;
+  type?: 'text' | 'number';
   form: UseFormReturn<FieldValues, any>;
 }
 
@@ -24,6 +25,7 @@ const AppInput = (props: AppInputProps) => {
     minL = 0,
     maxL = 100,
     disabled,
+    type = 'text',
   } = props;
 
   return (
@@ -53,7 +55,8 @@ const AppInput = (props: AppInputProps) => {
             <TextField
               placeholder={placeholder}
               label={label}
-              required
+              type={type}
+              required={required}
               disabled={disabled}
               helperText={helperText}
               error={!!error}
