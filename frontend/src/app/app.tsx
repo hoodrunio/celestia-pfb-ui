@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import AppInput from './components/AppInput';
 import { useForm } from 'react-hook-form';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useInitial } from './hooks/apiHooks/useInitial';
 import { useGetPbfTxData } from './hooks/apiHooks/useGeneratePfbParams';
 import { PbfTxDataResponse, submitPbfTx } from './api/apiService';
@@ -86,6 +86,10 @@ export function App() {
   const onSubmit = async (data: any) => {
     const formData = data as PfbFormType;
     setAnyLoading(true);
+    toast.warning("This may take a while, don't close the app", {
+      autoClose: 10000,
+      draggable: true,
+    });
 
     try {
       const data = await submitPbfTx(formData);
@@ -93,6 +97,7 @@ export function App() {
     } catch (error) {
       setError(error as APiError);
     } finally {
+      toast.dismiss();
       setAnyLoading(false);
     }
   };
