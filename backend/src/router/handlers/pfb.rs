@@ -1,8 +1,6 @@
+use crate::{res, ApiService, SubmitPfbNodeResponse};
 use axum::Json;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
-
-use crate::{res, ApiService, SubmitPfbNodeResponse};
 
 use super::{gen_pfb_tx_data, HandlerResult};
 

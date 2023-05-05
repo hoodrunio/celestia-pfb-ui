@@ -1,4 +1,3 @@
-use axum::Json;
 use serde::{Deserialize, Serialize};
 
 use crate::res;

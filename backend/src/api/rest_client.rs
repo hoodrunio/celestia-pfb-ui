@@ -6,7 +6,7 @@ use reqwest::{
 };
 use serde::{de::DeserializeOwned, Serialize};
 
-use crate::{AppError, SubmitPfbNodeRequest, SubmitPfbNodeResponse};
+use crate::{SubmitPfbNodeRequest, SubmitPfbNodeResponse};
 
 #[derive(Default, Debug)]
 pub struct ApiService {
