@@ -46,14 +46,12 @@ pub struct CreatePfbTxRequest {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PfbTxResponse {
-    pub pfb_result: Value,
+    pub pfb_result: SubmitPfbNodeResponse,
 }
 
 impl From<SubmitPfbNodeResponse> for PfbTxResponse {
     fn from(res: SubmitPfbNodeResponse) -> Self {
-        Self {
-            pfb_result: serde_json::to_value(res).unwrap_or_default(),
-        }
+        Self { pfb_result: res }
     }
 }
 
