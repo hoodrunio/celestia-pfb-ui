@@ -7,7 +7,7 @@ export interface IRequestOptions {
 export const getBaseData = async <T>(options: IRequestOptions): Promise<T> => {
   const { path, method = 'GET', data: body } = options;
 
-  const API_BASE_URL = 'http://0.0.0.0:8000';
+  const API_BASE_URL = 'http://95.216.171.158:8000';
 
   const base_url = API_BASE_URL;
 
