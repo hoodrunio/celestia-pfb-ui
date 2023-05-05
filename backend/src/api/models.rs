@@ -4,6 +4,7 @@ use serde_json::Value;
 
 const GAS_LIMIT: u64 = 80000;
 const FEE: u64 = 2000;
+const DEFAULT_SEED: u64 = 88;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SubmitPfbNodeRequest {
@@ -14,8 +15,9 @@ pub struct SubmitPfbNodeRequest {
 }
 
 impl SubmitPfbNodeRequest {
-    pub fn new(namespace_id: Option<String>, message: Option<String>) -> Self {
-        let mut gen = PayForBlobGen::new();
+    pub fn new(namespace_id: Option<String>, message: Option<String>, seed: Option<u64>) -> Self {
+        let mut gen = PayForBlobGen::from_seed(seed.unwrap_or(DEFAULT_SEED));
+
         Self {
             namespace_id: namespace_id.unwrap_or_else(|| gen.namespace_id()),
             data: message.unwrap_or_else(|| gen.message(100)),

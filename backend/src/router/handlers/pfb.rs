@@ -12,13 +12,20 @@ pub async fn submit_pfb_tx(
     let CreatePfbTxRequest {
         node_url,
         port,
+        seed,
         namespace_id,
         message,
     } = payload;
 
     let api = ApiService::new(node_url, port);
+    let seed = seed.map(|s| s.parse::<u64>().ok()).unwrap_or(None);
+
     let response = api
-        .submit_pfb(crate::SubmitPfbNodeRequest::new(namespace_id, message))
+        .submit_pfb(crate::SubmitPfbNodeRequest::new(
+            namespace_id,
+            message,
+            seed,
+        ))
         .await?;
 
     Ok(res(response.into()))
@@ -32,6 +39,7 @@ pub async fn generated_pfb_tx_data() -> HandlerResult<PfbGeneratedTxDataResponse
 pub struct CreatePfbTxRequest {
     pub namespace_id: Option<String>,
     pub message: Option<String>,
+    pub seed: Option<String>,
     pub node_url: String,
     pub port: String,
 }
