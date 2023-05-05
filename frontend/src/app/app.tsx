@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import AppInput from './components/AppInput';
 import { useForm } from 'react-hook-form';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useInitial } from './hooks/apiHooks/useInitial';
 import { useGetPbfTxData } from './hooks/apiHooks/useGeneratePfbParams';
 import { PbfTxDataResponse, submitPbfTx } from './api/apiService';
@@ -23,6 +23,7 @@ enum FORM_FIELD {
   MESSAGE = 'message',
   NODE_URL = 'node_url',
   PORT = 'port',
+  SEED = 'seed',
 }
 
 interface PfbFormType {
@@ -30,8 +31,10 @@ interface PfbFormType {
   [FORM_FIELD.MESSAGE]: '';
   [FORM_FIELD.NODE_URL]: '';
   [FORM_FIELD.PORT]: '';
+  [FORM_FIELD.SEED]: '';
 }
 
+const SEED_RANGE = { mx: 1000, mn: 100 };
 export function App() {
   const [anyLoading, setAnyLoading] = useState(false);
   const [anyError, setAnyError] = useState<APiError | undefined>(undefined);
@@ -61,6 +64,7 @@ export function App() {
       [FORM_FIELD.MESSAGE]: '',
       [FORM_FIELD.NODE_URL]: '',
       [FORM_FIELD.PORT]: '',
+      [FORM_FIELD.SEED]: '',
     }),
     []
   );
@@ -79,8 +83,8 @@ export function App() {
 
   const onReset = useCallback(() => {
     setPfbTxResult(undefined);
-    generatePfbTxData();
     reset(formInitValue());
+    generatePfbTxData();
   }, [reset, formInitValue, generatePfbTxData]);
 
   const onSubmit = async (data: any) => {
@@ -191,6 +195,27 @@ export function App() {
               label="Port"
               toolTipText="Your node public port"
             />
+          </Grid>
+          <Grid
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            item
+            xs={12}
+          >
+            <Box>
+              <AppInput
+                formName={FORM_FIELD.SEED}
+                type="number"
+                form={form}
+                required={false}
+                maxL={SEED_RANGE.mx.toString().length}
+                minL={SEED_RANGE.mn.toString().length}
+                disabled={disableInputs}
+                label="Max Seed Range"
+                toolTipText="Generator max seed range"
+              />
+            </Box>
           </Grid>
           <Grid
             xs
